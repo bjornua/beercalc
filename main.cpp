@@ -1,12 +1,10 @@
 #include "wx/wx.h"
 
-class MyApp: public wxApp
-{
+class MainApp: public wxApp {
     virtual bool OnInit();
 };
 
-class MyFrame: public wxFrame
-{
+class MyFrame: public wxFrame {
 public:
     MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 
@@ -16,23 +14,21 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
-enum
-    {
-        ID_Quit = 1,
-        ID_About,
-    };
+enum {
+    ID_Quit = 1,
+    ID_About = 2,
+};
 
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
 EVT_MENU(ID_Quit, MyFrame::OnQuit)
 EVT_MENU(ID_About, MyFrame::OnAbout)
 END_EVENT_TABLE()
 
-IMPLEMENT_APP(MyApp)
+IMPLEMENT_APP(MainApp)
 
-bool MyApp::OnInit()
+bool MainApp::OnInit()
 {
-    MyFrame *frame = new MyFrame( _("Hello World"), wxPoint(50, 50),
-                                                                wxSize(450,340) );
+    MyFrame *frame = new MyFrame( _("Hello World"), wxPoint(50, 50),  wxSize(450,340) );
     frame->Show(true);
     SetTopWindow(frame);
     return true;
