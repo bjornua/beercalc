@@ -1,28 +1,5 @@
-#include "wx/wx.h"
+#include "mainwindow.h"
 
-class MainApp: public wxApp {
-    virtual bool OnInit();
-};
-
-class MyFrame: public wxFrame {
-public:
-    MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
-
-    void OnQuit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-
-    DECLARE_EVENT_TABLE()
-};
-
-enum {
-    ID_Quit = 1,
-    ID_About = 2,
-};
-
-BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-EVT_MENU(ID_Quit, MyFrame::OnQuit)
-EVT_MENU(ID_About, MyFrame::OnAbout)
-END_EVENT_TABLE()
 
 IMPLEMENT_APP(MainApp)
 
@@ -46,7 +23,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     wxMenuBar *menuBar = new wxMenuBar;
     menuBar->Append( menuFile, _("&File") );
 
-    SetMenuBar( menuBar );
+    this->SetMenuBar( menuBar );
 
     CreateStatusBar();
     SetStatusText( _("Welcome to wxWidgets!") );
@@ -64,3 +41,4 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
                  wxOK | wxICON_INFORMATION, this
     );
 }
+
