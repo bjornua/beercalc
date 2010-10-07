@@ -11,8 +11,8 @@ class MainFrame(wx.Frame):
         self.CreateStatusBar() # self.GetStatusBar()
         self.SetMenuBar(MenuBar(self)) # self.GetMenuBar()
         self.tabPanel = TabPanel(self)
-        self.Show(True)
         self.Bind(wx.EVT_MENU, self.EventHandler)
+        self.Show(True)
     
     def EventHandler(self, event):
         if event.Id == wx.ID_OPEN:
@@ -21,7 +21,10 @@ class MainFrame(wx.Frame):
             return self.OnExit()
         if event.Id == wx.ID_SAVE:
             return self.OnSave()
-
+        if event.Id == wx.ID_SAVEAS:
+            return self.OnSaveAs()
+        event.Skip()
+    
     def OnExit(self):
         self.Close(True)
 

@@ -16,15 +16,15 @@ class FileMenu(wx.Menu):
 class FileMenuOpen(wx.MenuItem):
     def __init__(self, menu):
         wx.MenuItem.__init__(self, menu, wx.ID_OPEN, u"&Åbn", u"Åben en fil")
-        
+
 class FileMenuSave(wx.MenuItem):
     def __init__(self, menu):
         wx.MenuItem.__init__(self, menu, wx.ID_SAVE, u"&Gem", u"Gem filen")
-        
+
 class FileMenuSaveAs(wx.MenuItem):
     def __init__(self, menu):
         wx.MenuItem.__init__(self, menu, wx.ID_SAVEAS, u"Gem &som", u"Gem filen som et andet navn")
-        
+
 class FileMenuExit(wx.MenuItem):
     def __init__(self, menu):
         wx.MenuItem.__init__(self, menu, wx.ID_EXIT, u"&Afslut", u"Afslut BeerCalc")
