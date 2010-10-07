@@ -5,9 +5,9 @@ class MainMenuBar(wx.MenuBar):
     def __init__(self):
         wx.MenuBar.__init__(self)
         filemenu = wx.Menu()
-        filemenu.Append(wx.ID_OPEN, u"&Åbn", u"Åben en fil")
-        filemenu.Append(wx.ID_SAVE, u"&Gem", u"Gemmer filen")
-        filemenu.Append(wx.ID_EXIT, u"&Luk", u"Luk BeerCalc")
+        self.open = filemenu.Append(wx.ID_OPEN, u"&Åbn", u"Åben en fil")
+        self.save = filemenu.Append(wx.ID_SAVE, u"&Gem", u"Gemmer filen")
+        self.close = filemenu.Append(wx.ID_EXIT, u"&Luk", u"Luk BeerCalc")
         self.Append(filemenu, u"&Filer")
 
 class ExpenseTab(wx.NotebookPage):
@@ -54,6 +54,10 @@ class MainFrame(wx.Frame):
         title = u"BeerCalc"
         wx.Frame.__init__(self, None, title=title, size=size)
         self.CreateStatusBar()
-        self.SetMenuBar(MainMenuBar())
+        self.menubar = MainMenuBar()
+        self.Bind(wx.EVT_MENU, self.OnExit, self.menubar.close)
+        self.SetMenuBar(self.menubar)
         self.TabPanel = TabPanel(self)
         self.Show(True)
+    def OnExit(self,event):
+        self.Close(True)
