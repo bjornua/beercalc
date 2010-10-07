@@ -5,13 +5,13 @@ IMPLEMENT_APP(MainApp)
 
 bool MainApp::OnInit()
 {
-    MyFrame *frame = new MyFrame( _("Hello World"), wxPoint(50, 50),  wxSize(450,340) );
+    MainFrame *frame = new MainFrame( _("Hello World"), wxPoint(50, 50),  wxSize(450,340) );
     frame->Show(true);
     SetTopWindow(frame);
     return true;
 }
 
-MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
+MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame( NULL, -1, title, pos, size )
 {
     wxMenu *menuFile = new wxMenu;
@@ -29,16 +29,15 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     SetStatusText( _("Welcome to wxWidgets!") );
 }
 
-void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
-{
+void MainFrame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
     Close(TRUE);
 }
 
-void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
-{
-    wxMessageBox(_("This is a wxWidgets Hello world sample"),
-                 _("About Hello World"),
-                 wxOK | wxICON_INFORMATION, this
+void MainFrame::OnAbout(wxCommandEvent& WXUNUSED(event)) {
+    wxMessageBox(
+        _("This is a wxWidgets Hello world sample"),
+        _("About Hello World"),
+        wxOK | wxICON_INFORMATION, this
     );
 }
 

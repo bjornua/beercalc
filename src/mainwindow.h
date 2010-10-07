@@ -11,9 +11,9 @@ class MainApp: public wxApp {
     virtual bool OnInit();
 };
 
-class MyFrame: public wxFrame {
+class MainFrame: public wxFrame {
 public:
-    MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+    MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
@@ -21,9 +21,9 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-EVT_MENU(ID_Quit, MyFrame::OnQuit)
-EVT_MENU(ID_About, MyFrame::OnAbout)
+BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+EVT_MENU(ID_Quit, MainFrame::OnQuit)
+EVT_MENU(ID_About, MainFrame::OnAbout)
 END_EVENT_TABLE()
 
 
