@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import app
+import beercalc.app
 
 if __name__ == "__main__":
-    app.BeerCalcApp().MainLoop()
+    beercalc.app.BeerCalcApp().MainLoop()
 

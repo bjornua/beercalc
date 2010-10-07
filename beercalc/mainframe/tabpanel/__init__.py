@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from expense import ExpenseTab
-from config import ConfigTab
-from people import PeopleTab
-from stregliste import StreglisteTab
-from status import StatusTab
-
 import wx
+from .expense import ExpenseTab
+from .config import ConfigTab
+from .people import PeopleTab
+from .stregliste import StreglisteTab
+from .status import StatusTab
+
 class TabPanel(wx.Notebook):
     def __init__(self, parent):
         wx.Notebook.__init__(self, parent)

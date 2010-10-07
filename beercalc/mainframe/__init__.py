@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import wx
-from menubar import MenuBar
-from tabpanel import TabPanel
+from .menubar import MenuBar
+from .tabpanel import TabPanel
 
 class MainFrame(wx.Frame):
     def __init__(self):

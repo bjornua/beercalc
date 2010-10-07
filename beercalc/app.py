@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import wx
-from beercalc.mainframe import MainFrame
+from .mainframe import MainFrame
 
 class BeerCalcApp(wx.App):
     def __init__(self):

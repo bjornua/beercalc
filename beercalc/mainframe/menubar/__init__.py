@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import wx
-
-from file import FileMenu
+from .file import FileMenu
 
 class MenuBar(wx.MenuBar):
     def __init__(self, frame):
