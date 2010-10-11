@@ -2,6 +2,7 @@
 import gtk
 import gobject
 import pango
+import uuid
 
 class ExpensesTab(gtk.HBox):
     def __init__(self):
@@ -30,7 +31,13 @@ class OptionsContainer(gtk.VBox):
 class AddButton(gtk.Button):
     def __init__(self):
         super(type(self), self).__init__(u"_Tilføj")
-        
+        self.connect("clicked", self.OnClick)
+
+    def OnClick(self, button):
+        table = self.get_parent().get_parent().expenseTable.table
+        iter = table.store.append((uuid.uuid4().get_hex(), "", "0 kr.", 0))
+        table.set_cursor(table.store.get_path(iter), table.col1, True)
+
 class RemoveButton(gtk.Button):
     def __init__(self):
         super(type(self), self).__init__(u"_Slet")
@@ -38,11 +45,12 @@ class RemoveButton(gtk.Button):
     
     def OnClick(self, button):
         table = self.get_parent().get_parent().expenseTable.table
-        selection = list(table.get_selection().get_selected())[1]
+        selection = list(table.get_selection().get_selected())
         
         if selection != None:
-            raise Exception(selection)
-        
+            treeStore, iter = selection
+            selection = treeStore.remove(iter)
+
 class EditButton(gtk.Button):
     def __init__(self):
         super(type(self), self).__init__(u"_Redigér")
@@ -54,11 +62,19 @@ class ExpenseTable(gtk.ScrolledWindow):
         self.add(self.table)
 
 class ExpenseTreeView(gtk.TreeView):
+    def OnEditDoneDesc(self, cell, path, new_text):
+        iter = self.store.get_iter(path)
+        self.store.set(iter, 1, new_text)
+
+    def OnEditDoneAmount(self, cell, path, new_text):
+        iter = self.store.get_iter(path)
+        self.store.set(iter, 2, new_text)
+
     def __init__(self):
-        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.store.append(("Tuborg"     ,  "423,23 kr."))
-        self.store.append(("Guld tuborg", "2342,23 kr."))
-        self.store.append(("Sodavand",       "3,23 kr."))
+        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT)
+        self.store.append((uuid.uuid4().get_hex(), u"Tuborg"     ,  "423,23 kr.", 42323))
+        self.store.append((uuid.uuid4().get_hex(), u"Guld tuborg", "2342,23 kr.", 242423))
+        self.store.append((uuid.uuid4().get_hex(), u"Sodavand",       "3,23 kr.", 323))
 
         super(type(self), self).__init__(model=self.store)
         
@@ -72,6 +88,9 @@ class ExpenseTreeView(gtk.TreeView):
 
         self.cell1 = gtk.CellRendererText()
         self.cell2 = gtk.CellRendererText()
+
+        self.cell1.connect("edited", self.OnEditDoneDesc)
+        self.cell2.connect("edited", self.OnEditDoneAmount)
         
         self.col1.pack_start(self.cell1, expand=True)
         self.col2.pack_start(self.cell2, expand=False)
@@ -82,9 +101,12 @@ class ExpenseTreeView(gtk.TreeView):
 
         self.col2.set_property("title", u"Pris")
         self.cell2.set_property("xalign", 1)
+
+        self.cell1.set_property("editable", True)
+        self.cell2.set_property("editable", True)
         
-        self.col1.add_attribute(self.cell1, 'text', 0)
-        self.col2.add_attribute(self.cell2, 'text', 1)
+        self.col1.add_attribute(self.cell1, 'text', 1)
+        self.col2.add_attribute(self.cell2, 'text', 2)
         
         self.append_column(self.col1)
         self.append_column(self.col2)
