@@ -81,7 +81,7 @@ class ExpenseTreeView(gtk.TreeView):
         self.set_property("rules-hint"   , True)
         
         self.set_property("enable-search", True)
-        self.set_property("search-column", 0   )
+        self.set_property("search-column", 1   )
         
         self.col1 = gtk.TreeViewColumn()
         self.col2 = gtk.TreeViewColumn()
