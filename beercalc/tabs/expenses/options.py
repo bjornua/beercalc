@@ -16,6 +16,9 @@ class AddButton(gtk.Button):
     def __init__(self, treeview):
         super(type(self), self).__init__(u"_Tilføj")
         self.treeview = treeview
+        self.image = gtk.Image()
+        self.image.set_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_MENU)
+        self.set_image(self.image)
         self.store = treeview.store
         self.col_desc = self.treeview.col_desc
         self.connect("clicked", self.OnClick)
@@ -28,6 +31,9 @@ class AddButton(gtk.Button):
 class DeleteButton(gtk.Button):
     def __init__(self, treeview):
         super(type(self), self).__init__(u"_Slet")
+        self.image = gtk.Image()
+        self.image.set_from_stock(gtk.STOCK_DELETE, gtk.ICON_SIZE_MENU)
+        self.set_image(self.image)
         self.treeview = treeview
         self.connect("clicked", self.OnClick)
     
