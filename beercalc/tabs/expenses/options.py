@@ -32,7 +32,10 @@ class DeleteButton(gtk.Button):
         self.connect("clicked", self.OnClick)
     
     def OnClick(self, button):
-        store, iter = self.treeview.get_selection().get_selected()
+        store, paths = self.treeview.get_selection().get_selected_rows()
+        references = [gtk.TreeRowReference(store, path) for path in paths]
         
-        if iter != None:
+        for reference in references:
+            path = reference.get_path()
+            iter = store.get_iter(path)
             store.remove(iter)
