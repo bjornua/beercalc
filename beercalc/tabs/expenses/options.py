@@ -5,16 +5,12 @@ class OptionsContainer(gtk.VBox):
     def __init__(self, treeview):
         super(type(self), self).__init__()
         self.treeview = treeview
-        self.store = treeview.store
         self.button_add = AddButton(treeview)
         self.button_delete = DeleteButton(treeview)
-        self.button_edit = EditButton(treeview)
         self.add(self.button_add)
         self.add(self.button_delete)
-        self.add(self.button_edit)
         self.child_set_property(self.button_add, "expand", False)
         self.child_set_property(self.button_delete, "expand", False)
-        self.child_set_property(self.button_edit, "expand", False)
 
 class AddButton(gtk.Button):
     def __init__(self, treeview):
@@ -40,9 +36,3 @@ class DeleteButton(gtk.Button):
         
         if iter != None:
             store.remove(iter)
-        
-class EditButton(gtk.Button):
-    def __init__(self, treeview):
-        super(type(self), self).__init__(u"_Redigér")
-        self.treeview = treeview
-

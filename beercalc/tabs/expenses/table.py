@@ -24,20 +24,19 @@ class ExpenseTable(gtk.TreeView):
         self.cell_desc = gtk.CellRendererText()
         self.cell_amount = AmountCell(self)
 
-        self.col_desc.pack_start(self.cell_desc, expand=True)
-        self.col_amount.pack_start(self.cell_amount, expand=False)
-        
-        self.cell_desc.connect("edited", self.OnEditDoneDesc)
+        self.col_desc.pack_start(self.cell_desc)
+        self.col_amount.pack_start(self.cell_amount)
         
         self.col_desc.set_property("title", u"Beskrivelse")
         self.col_desc.set_property("expand", True)
         self.col_desc.set_property("sizing", gtk.TREE_VIEW_COLUMN_AUTOSIZE)
-        self.cell_desc.set_property("xalign", 0)
 
         self.col_amount.set_property("title", u"Pris")
         self.col_amount.set_property("sizing", gtk.TREE_VIEW_COLUMN_AUTOSIZE)
 
+        self.cell_desc.set_property("xalign", 0)
         self.cell_desc.set_property("editable", True)
+        self.cell_desc.connect("edited", self.OnEditDoneDesc)
         
         self.col_desc.add_attribute(self.cell_desc, 'text', 2)
         self.col_amount.add_attribute(self.cell_amount, 'text', 3)
@@ -47,7 +46,6 @@ class ExpenseTable(gtk.TreeView):
 
     def OnEditDoneDesc(self, cell, path, new_text):
         self.store.set(self.store.get_iter(path), text = new_text)
-
 
 class AmountCell(gtk.CellRendererText):
     def __init__(self, treeview):

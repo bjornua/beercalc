@@ -15,9 +15,6 @@ class MainTabs(gtk.Notebook):
         self.peopleTab = PeopleTab()
         self.streglisteTab = StreglisteTab()
         self.statusTab = StatusTab()
-        self.append_page(self.expensesTab, gtk.Label(self.expensesTab.title))
-        self.append_page(self.configTab, gtk.Label(self.configTab.title))
-        self.append_page(self.peopleTab, gtk.Label(self.peopleTab.title))
-        self.append_page(self.streglisteTab, gtk.Label(self.streglisteTab.title))
-        self.append_page(self.statusTab, gtk.Label(self.statusTab.title))
-
+        
+        for x in (self.expensesTab, self.configTab, self.peopleTab, self.streglisteTab, self.statusTab):
+            self.append_page(x, gtk.Label(x.title))
