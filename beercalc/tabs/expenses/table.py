@@ -18,8 +18,7 @@ class ExpenseTable(gtk.TreeView):
         self.set_property("rules-hint"   , True)
         self.set_property("rubber-banding"   , True)
         
-        self.set_property("enable-search", True)
-        self.set_property("search-column", 1   )
+        self.set_property("enable-search", False)
         
         self.col_desc = gtk.TreeViewColumn()
         self.col_amount = gtk.TreeViewColumn()
