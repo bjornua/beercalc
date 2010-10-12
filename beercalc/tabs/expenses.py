@@ -20,13 +20,10 @@ class OptionsContainer(gtk.VBox):
         super(type(self), self).__init__()
         self.button_add = AddButton()
         self.button_remove = RemoveButton()
-        self.button_edit = EditButton()
         self.add(self.button_add)
         self.add(self.button_remove)
-        self.add(self.button_edit)
         self.child_set_property(self.button_add, "expand", False)
         self.child_set_property(self.button_remove, "expand", False)
-        self.child_set_property(self.button_edit, "expand", False)
 
 
 class ExpenseTable(gtk.ScrolledWindow):
@@ -135,8 +132,3 @@ class RemoveButton(gtk.Button):
         if selection != None:
             treeStore, iter = selection
             selection = treeStore.remove(iter)
-
-class EditButton(gtk.Button):
-    def __init__(self):
-        super(type(self), self).__init__(u"_Redigér")
-
