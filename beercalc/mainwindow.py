@@ -7,7 +7,8 @@ class MainWindow(gtk.Window):
     def __init__(self):
         super(type(self), self).__init__(gtk.WINDOW_TOPLEVEL)
         self.get_settings().set_long_property("gtk-button-images", True, "burp")
-
+        self.acg = gtk.AccelGroup()
+        self.add_accel_group(self.acg)
         self.set_title(u"BeerCalc")
         self.connect("destroy", self.OnDestroy)
         self.mainTabs = MainTabs()

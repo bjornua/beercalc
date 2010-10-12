@@ -46,8 +46,29 @@ class ExpenseTable(gtk.TreeView):
         self.append_column(self.col_desc)
         self.append_column(self.col_amount)
 
+        self.connect("focus-in-event", self.OnFocusIn)
+        self.connect("focus-out-event", self.OnFocusOut)
+
     def OnEditDoneDesc(self, cell, path, new_text):
         self.store.set(self.store.get_iter(path), text = new_text)
+    
+    def OnFocusIn(self, treeview, event):
+        acg = self.get_toplevel().acg.connect_group(65535, 0, 0, self.OnPressDelete)
+        
+    def OnFocusOut(self, treeview, event):
+        acg = self.get_toplevel().acg.disconnect_key(65535,0)
+    
+    def OnPressDelete(self, *args):
+        self.remove_selected()
+    
+    def remove_selected(self):
+        store, paths = self.get_selection().get_selected_rows()
+        references = [gtk.TreeRowReference(store, path) for path in paths]
+        
+        for reference in references:
+            path = reference.get_path()
+            iter = store.get_iter(path)
+            store.remove(iter)
 
 class AmountCell(gtk.CellRendererText):
     def __init__(self, treeview):
