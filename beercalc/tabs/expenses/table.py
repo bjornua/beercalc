@@ -5,6 +5,8 @@ class ExpenseContainer(gtk.ScrolledWindow):
     def __init__(self, store):
         super(type(self), self).__init__()
         self.treeview = ExpenseTable(store)
+        self.set_property("vscrollbar-policy", gtk.POLICY_ALWAYS)
+        self.set_property("hscrollbar-policy", gtk.POLICY_NEVER)
         self.add(self.treeview)
 
 class ExpenseTable(gtk.TreeView):
