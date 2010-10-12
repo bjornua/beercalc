@@ -129,6 +129,6 @@ class RemoveButton(gtk.Button):
         table = self.get_parent().get_parent().expenseTable.table
         selection = list(table.get_selection().get_selected())
         
-        if selection != None:
+        if selection[1] != None:
             treeStore, iter = selection
             selection = treeStore.remove(iter)
