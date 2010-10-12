@@ -24,9 +24,7 @@ class AddButton(gtk.Button):
         self.connect("clicked", self.OnClick)
 
     def OnClick(self, button):
-        iter = self.store.append_new()
-        path = self.treeview.store.get_path(iter)
-        self.treeview.set_cursor(path, self.col_desc, start_editing = True)
+        self.treeview.append_new()
 
 class DeleteButton(gtk.Button):
     def __init__(self, treeview):
