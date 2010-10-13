@@ -3,7 +3,7 @@ import gtk
 import gobject
 import uuid
 
-class ExpenseStore(gtk.ListStore):
+class ProductStore(gtk.ListStore):
     def __init__(self):
         super(type(self), self).__init__(
             gobject.TYPE_PYOBJECT,

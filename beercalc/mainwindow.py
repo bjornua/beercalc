@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import gtk
-from .maintabs import MainTabs
+from .tabs import MainTabs
 from .menubar import MenuBar
 
 class MainWindow(gtk.Window):

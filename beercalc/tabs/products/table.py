@@ -1,22 +1,11 @@
 # -*- coding: utf-8 -*-
 import gtk
 
-class ExpenseContainer(gtk.VBox):
-    def __init__(self, store):
-        super(type(self), self).__init__()
-        self.scrollwindow = ExpenseTableScroll(store)
-        self.status = ExpenseStatus()
-        self.add(self.scrollwindow)
-        self.add(self.status)
-        self.child_set_property(self.status, "expand", False)
-
-class ExpenseStatus(gtk.HBox):
+class ProductStatus(gtk.Label):
     def __init__(self):
         super(type(self), self).__init__()
-        self.label = gtk.Label()
         self.update_amount(0)
-        self.label.set_property("xalign", 1)
-        self.add(self.label)
+        self.set_property("xalign", 1)
     
     def update_amount(self, amount):
         integer  = str(amount // 100)
@@ -27,19 +16,10 @@ class ExpenseStatus(gtk.HBox):
         integer = integer[::-1]
         amount_text = integer + "," + fraction + " kr."
         
-        self.label.set_markup(u"Total: <b>" + amount_text + "</b>")
+        self.set_markup(u"Total: <b>" + amount_text + "</b>")
 
-class ExpenseTableScroll(gtk.ScrolledWindow):
-    def __init__(self, store):
-        super(type(self), self).__init__()
-        self.treeview = ExpenseTable(store)
-        self.set_property("vscrollbar-policy", gtk.POLICY_ALWAYS)
-        self.set_property("hscrollbar-policy", gtk.POLICY_NEVER)
-        self.add(self.treeview)
-    
-
-class ExpenseTable(gtk.TreeView):
-    def __init__(self, store):
+class ProductTable(gtk.TreeView):
+    def __init__(self, store, status):
         super(type(self), self).__init__(model=store)
         
         self.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
@@ -79,6 +59,8 @@ class ExpenseTable(gtk.TreeView):
 
         self.connect("focus-in-event", self.OnFocusIn)
         self.connect("focus-out-event", self.OnFocusOut)
+        
+        self.status = status
 
     def OnEditDoneDesc(self, cell, path, new_text):
         self.store.set(self.store.get_iter(path), text = new_text)
@@ -120,7 +102,7 @@ class ExpenseTable(gtk.TreeView):
         self.set_cursor(path, self.col_desc, start_editing = True)
     
     def update_status(self):
-        self.get_parent().get_parent().status.update_amount(self.store.total)
+        self.status.update_amount(self.store.total)
 
 class AmountCell(gtk.CellRendererText):
     def __init__(self, treeview):
