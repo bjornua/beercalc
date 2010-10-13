@@ -56,12 +56,23 @@ class ExpenseTable(gtk.TreeView):
     
     def OnFocusIn(self, treeview, event):
         self.get_toplevel().acg.connect_group(65535, 0, 0, self.OnPressDelete)
+        self.get_toplevel().acg.connect_group(65471, 0, 0, self.OnPressF2)
         
     def OnFocusOut(self, treeview, event):
         acg = self.get_toplevel().acg.disconnect_key(65535,0)
+        acg = self.get_toplevel().acg.disconnect_key(65471,0)
     
     def OnPressDelete(self, *args):
         self.remove_selected()
+    
+    def OnPressF2(self, *args):
+        self.edit_selected()
+    
+    def edit_selected(self):
+        path, col = self.get_cursor()
+        
+        if(path != None):
+            self.set_cursor(path, col, start_editing = True)
     
     def remove_selected(self):
         store, paths = self.get_selection().get_selected_rows()
