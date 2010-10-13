@@ -10,7 +10,7 @@ class ExpensesTab(gtk.HBox):
         self.title = u"Udgifter"
         self.store = ExpenseStore()
         self.expense = ExpenseContainer(self.store)
-        self.options = OptionsContainer(self.expense.treeview)
+        self.options = OptionsContainer(self.expense.scrollwindow.treeview)
         self.add(self.expense)
         self.add(self.options)
         self.child_set_property(self.expense, "expand", True)

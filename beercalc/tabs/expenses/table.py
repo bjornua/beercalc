@@ -1,13 +1,42 @@
 # -*- coding: utf-8 -*-
 import gtk
 
-class ExpenseContainer(gtk.ScrolledWindow):
+class ExpenseContainer(gtk.VBox):
+    def __init__(self, store):
+        super(type(self), self).__init__()
+        self.scrollwindow = ExpenseTableScroll(store)
+        self.status = ExpenseStatus()
+        self.add(self.scrollwindow)
+        self.add(self.status)
+        self.child_set_property(self.status, "expand", False)
+
+class ExpenseStatus(gtk.HBox):
+    def __init__(self):
+        super(type(self), self).__init__()
+        self.label = gtk.Label()
+        self.update_amount(0)
+        self.label.set_property("xalign", 1)
+        self.add(self.label)
+    
+    def update_amount(self, amount):
+        integer  = str(amount // 100)
+        fraction = str(amount % 100)
+        fraction = (fraction + "0")[:2]
+        integer = integer[::-1]
+        integer = ".".join(integer[i:i+3] for i in range(0, len(integer), 3))
+        integer = integer[::-1]
+        amount_text = integer + "," + fraction + " kr."
+        
+        self.label.set_markup(u"Total: <b>" + amount_text + "</b>")
+
+class ExpenseTableScroll(gtk.ScrolledWindow):
     def __init__(self, store):
         super(type(self), self).__init__()
         self.treeview = ExpenseTable(store)
         self.set_property("vscrollbar-policy", gtk.POLICY_ALWAYS)
         self.set_property("hscrollbar-policy", gtk.POLICY_NEVER)
         self.add(self.treeview)
+    
 
 class ExpenseTable(gtk.TreeView):
     def __init__(self, store):
@@ -82,11 +111,16 @@ class ExpenseTable(gtk.TreeView):
             path = reference.get_path()
             iter = store.get_iter(path)
             store.remove(iter)
+        self.update_status()
     
     def append_new(self):
         iter = self.store.append_new()
+        self.update_status()
         path = self.store.get_path(iter)
         self.set_cursor(path, self.col_desc, start_editing = True)
+    
+    def update_status(self):
+        self.get_parent().get_parent().status.update_amount(self.store.total)
 
 class AmountCell(gtk.CellRendererText):
     def __init__(self, treeview):
@@ -98,9 +132,12 @@ class AmountCell(gtk.CellRendererText):
         self.set_property("editable", True)
     
     def OnEditStart(self, cell, entry, path):
-        text = entry.get_text()
-        text = text[:-4]
-        entry.set_text(text)
+        amount = self.treeview.store[path][1]
+        integer  = str(amount // 100)
+        fraction = str(amount % 100)
+        fraction = (fraction + "0")[:2]
+        amount_text = integer + "," + fraction
+        entry.set_text(amount_text)
 
     def OnEditEnd(self, cell, path, amount):
         if not all(x in "0123456789," for x in amount):
@@ -109,6 +146,8 @@ class AmountCell(gtk.CellRendererText):
         if len(amount) > 2:
             return
         amount = int("".join(amount[0:1]) + "".join(amount[1:2])[0:2])
-        
+
         store = self.treeview.store
         store.set(store.get_iter(path), amount = amount)
+        self.treeview.update_status()
+
