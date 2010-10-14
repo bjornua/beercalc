@@ -4,7 +4,7 @@ import gtk
 class OptionsContainer(gtk.VBox):
     def __init__(self, treeview):
         super(type(self), self).__init__()
-        self.treeview = treeview
+        
         button_add = AddButton(treeview)
         button_delete = DeleteButton(treeview)
         self.add(button_add)
@@ -12,27 +12,26 @@ class OptionsContainer(gtk.VBox):
         self.child_set_property(button_add, "expand", False)
         self.child_set_property(button_delete, "expand", False)
 
-class AddButton(gtk.Button):
-    def __init__(self, treeview):
-        super(type(self), self).__init__(u"_Tilføj")
-        self.treeview = treeview
+class OptionButton(gtk.Button):
+    def __init__(self, label, stock_image):
+        gtk.Button.__init__(self, label)
         self.image = gtk.Image()
-        self.image.set_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_MENU)
+        self.image.set_from_stock(stock_image, gtk.ICON_SIZE_MENU)
         self.set_image(self.image)
-        self.col_desc = self.treeview.col_desc
         self.connect("clicked", self.OnClick)
+
+class AddButton(OptionButton):
+    def __init__(self, treeview):
+        OptionButton.__init__(self, u"_Tilføj", gtk.STOCK_ADD)
+        self.treeview = treeview
 
     def OnClick(self, button):
         self.treeview.append_new()
 
-class DeleteButton(gtk.Button):
+class DeleteButton(OptionButton):
     def __init__(self, treeview):
-        super(type(self), self).__init__(u"_Slet")
-        self.image = gtk.Image()
-        self.image.set_from_stock(gtk.STOCK_DELETE, gtk.ICON_SIZE_MENU)
-        self.set_image(self.image)
+        OptionButton.__init__(self, u"_Slet", gtk.STOCK_DELETE)
         self.treeview = treeview
-        self.connect("clicked", self.OnClick)
     
     def OnClick(self, button):
         self.treeview.remove_selected()

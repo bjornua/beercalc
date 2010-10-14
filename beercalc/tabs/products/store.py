@@ -15,7 +15,7 @@ class ProductStore(gtk.ListStore):
         
     def append_new(self):
         iter = self.append((uuid.uuid4().get_hex(), 0, "", ""))
-        self.set(iter, text = "Ny udgift", amount = 0)
+        self.set(iter, text = "Nyt produkt", amount = 0)
         return iter
     
     def remove(self, iter):
