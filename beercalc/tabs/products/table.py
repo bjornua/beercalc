@@ -11,6 +11,8 @@ class ProductStatus(gtk.Label):
         integer  = str(amount // 100)
         fraction = str(amount % 100)
         fraction = (fraction + "0")[:2]
+        
+        # Add thousands seperator
         integer = integer[::-1]
         integer = ".".join(integer[i:i+3] for i in range(0, len(integer), 3))
         integer = integer[::-1]

@@ -9,7 +9,7 @@ class MainTabs(gtk.Notebook):
         
         product = ProductBox()
         self.set_property("show-border", False)
-        self.set_property("homogeneous", True)
+        self.set_property("homogeneous", True )
         
         self.append_page(product, gtk.Label(u"Produkter"))
 
