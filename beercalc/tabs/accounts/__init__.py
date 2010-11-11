@@ -7,7 +7,6 @@ from .table import AccountTable
 class AccountBox(gtk.VBox):
     def __init__(self):
         super(type(self), self).__init__()
-        self.title = u"Account"
         
         store = AccountStore()
         table = AccountTable(store)

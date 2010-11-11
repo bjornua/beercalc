@@ -20,7 +20,7 @@ class MainWindow(gtk.Window):
         self.get_settings().set_long_property("gtk-button-images", True, "")
         self.set_property("default-height", 400        )
         self.set_property("default-width" , 400        )
-        self.set_property("title"         , u"BeerCalc")
+        self.set_property("title"         , u"RKG Ølregnskab")
         vbox.child_set_property(menu, "expand", False)
 
         self.connect("destroy", self.OnDestroy)

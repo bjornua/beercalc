@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import gtk
+from .add_product import ProductDialog
 
 class OptionsContainer(gtk.VBox):
     def __init__(self, treeview):
@@ -26,7 +27,8 @@ class AddButton(OptionButton):
         self.treeview = treeview
 
     def OnClick(self, button):
-        self.treeview.append_new()
+        ProductDialog(self.get_toplevel(), self.treeview.store)
+        self.treeview.store
 
 class DeleteButton(OptionButton):
     def __init__(self, treeview):

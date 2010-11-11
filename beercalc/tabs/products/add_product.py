@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import gtk
 from beercalc.lib.widget import StockButton, InputErrorDialog
-from beercalc.lib.objects import Account,DKK
+from beercalc.lib.objects import Product,DKK
 from beercalc.lib import parsenumber
 
-class AccountDialog(gtk.Window):
+class ProductDialog(gtk.Window):
     def __init__(self, toplevel, store):
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
         self.set_property("title"          , u"Opret produkt"            )
@@ -13,7 +13,7 @@ class AccountDialog(gtk.Window):
         self.set_property("window-position", gtk.WIN_POS_CENTER_ON_PARENT)
         self.acg = gtk.AccelGroup()
         self.add_accel_group(self.acg)
-        form = AccountForm(store)
+        form = ProductForm(store)
         self.acg.connect_group(65307, 0, 0, lambda *args: self.destroy())
         self.acg.connect_group(65293, 0, 0, lambda *args: form.button_save.OnClick())
         
@@ -21,16 +21,14 @@ class AccountDialog(gtk.Window):
 
         self.show_all()
 
-class AccountForm(gtk.VBox):
+class ProductForm(gtk.VBox):
     def __init__(self, store):
         gtk.VBox.__init__(self)
         
         input         = gtk.Table()
         name_entry    = gtk.Entry()
-        email_entry   = gtk.Entry()
-        type_vbox     = gtk.VBox()
-        type_rus      = gtk.RadioButton(label=u"_Rus")
-        type_vejleder = gtk.RadioButton(group = type_rus, label=u"_Rusvejleder")
+        sell_val_entry = gtk.Entry()
+        buy_val_entry = gtk.Entry()
         misc_entry    = gtk.Entry()
 
         buttons       = gtk.HButtonBox()
@@ -43,16 +41,14 @@ class AccountForm(gtk.VBox):
             (self, buttons),
                 (buttons, button_cancel),
                 (buttons, button_save),
-            (type_vbox, type_rus),
-            (type_vbox, type_vejleder),
         ):
             parent.add(child)
  
         for (n, (label_text, item)) in enumerate((
-            (u"Kontonavn:", name_entry ),
-            (u"Email:"    , email_entry),
-            (u"Type:"     , type_vbox ),
-            (u"Andet:"    , misc_entry ),
+            (u"Produktnavn:", name_entry    ),
+            (u"Indkøbspris:", buy_val_entry ),
+            (u"Salgspris:"  , sell_val_entry),
+            (u"Andet:"      , misc_entry    ),
         )):
             label = gtk.Label(label_text)
             label.set_property("xalign", 0.)
@@ -89,27 +85,25 @@ class AccountForm(gtk.VBox):
         
         input.set_property("column-spacing", 15)
         input.set_property("row-spacing", 4)
+        sell_val_entry.set_property("text", "0,00")
+        buy_val_entry.set_property("text", "0,00")
         self .set_property("border-width", 10)
         
-        self.name_entry    = name_entry
-        self.email_entry   = email_entry
-        self.type_rus      = type_rus
-        self.type_vejleder = type_vejleder
-        self.misc_entry    = misc_entry
+        self.name_entry     = name_entry
+        self.sell_val_entry = sell_val_entry
+        self.buy_val_entry  = buy_val_entry
+        self.misc_entry     = misc_entry
         
         buttons.set_property("layout-style", gtk.BUTTONBOX_END)
         self.child_set_property(buttons, "expand", False)
 
     def get_form_data(self):
-        name  = self.name_entry.get_property("text")
-        email = self.email_entry.get_property("text")
-        if self.type_rus.get_property("active"):
-            type = "rus"
-        else:
-            type = "rusvejleder"
-        misc = self.misc_entry .get_property("text")
+        name     = self.name_entry    .get_property("text")
+        sell_val = self.sell_val_entry.get_property("text")
+        buy_val  = self.buy_val_entry .get_property("text")
+        misc     = self.misc_entry    .get_property("text")
         
-        return name, email, type, misc
+        return name, sell_val, buy_val, misc
 
 class SaveButton(StockButton):
     def __init__(self, data_callback, store):
@@ -117,31 +111,34 @@ class SaveButton(StockButton):
         self.data_callback = data_callback
         self.store = store
 
+    
     def OnClick(self, *args):
         error_messages = list()
         
-        name, email, type, misc = self.data_callback()
+        name, sell_val, buy_val, misc = self.data_callback()
 
+        sell_val = parsenumber(sell_val)
+        buy_val = parsenumber(buy_val)
+        
         if name == "":
-            error_messages.append(u"Navn ikke udfyldt")
-        if email == "":
-            email = None
-        if misc == "":
-            misc = None
+            error_messages.append(u"Produktnavn ikke udfyldt")
+        if sell_val == None:
+            error_messages.append(u"Fejl i salgspris")
+        if buy_val == None:
+            error_messages.append(u"Fejl i købspris")
         
         if len(error_messages):
             dialog = InputErrorDialog(error_messages, self.get_toplevel())
             dialog.show_all()
             return 
         
-        account = Account(
-            name = name,
-            email = email,
-            type = type,
-            misc = misc
+        product = Product(
+            buy_val = DKK(buy_val),
+            sell_val = DKK(sell_val),
+            name = name
         )
         
-        self.store.append(account)
+        self.store.append(product)
         self.get_toplevel().destroy()
 
 class CancelButton(StockButton):
@@ -150,3 +147,5 @@ class CancelButton(StockButton):
 
     def OnClick(self, button):
         self.get_toplevel().destroy()
+
+

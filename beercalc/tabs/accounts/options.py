@@ -5,9 +5,9 @@ from beercalc.lib.widget import StockButton
 
 class OptionsContainer(gtk.VBox):
     def __init__(self, treeview):
-        super(type(self), self).__init__()
+        gtk.VBox.__init__(self)
         
-        button_add = AddButton(treeview)
+        button_add = AddButton(treeview.store)
         button_delete = DeleteButton(treeview)
         self.add(button_add)
         self.add(button_delete)
@@ -16,12 +16,12 @@ class OptionsContainer(gtk.VBox):
 
 
 class AddButton(StockButton):
-    def __init__(self, treeview):
+    def __init__(self, store):
         StockButton.__init__(self, u"_Tilføj", gtk.STOCK_ADD)
-        self.treeview = treeview
+        self.store = store
 
     def OnClick(self, button):
-        AccountDialog(self.get_toplevel(), None)
+        AccountDialog(self.get_toplevel(), self.store)
 
 class DeleteButton(StockButton):
     def __init__(self, treeview):

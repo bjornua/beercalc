@@ -1,40 +1,57 @@
 # -*- coding: utf-8 -*-
 import gtk
 import gobject
-import uuid
+from beercalc.lib.objects import DKK
+from beercalc.lib.misc import Observers
+
 
 class ProductStore(gtk.ListStore):
     def __init__(self):
         super(type(self), self).__init__(
             gobject.TYPE_PYOBJECT,
-            gobject.TYPE_PYOBJECT,
+            gobject.TYPE_STRING,
+            gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
         )
-        self.total = 0
+        self._total = DKK(0)
+        self.observers = Observers()
+    
+    @property
+    def total(self):
+        return self.total
+    
+    @total.setter
+    def total(self, new):
+        old = self._buy_val
+        self._buy_val = new
+        self.observers.notify("changed(total)", self, old)
+
+    
+    def append(self, product):
+        iter = gtk.ListStore.append(self)
+        row = self[iter]
+        row[0] = product
         
-    def append_new(self):
-        iter = self.append((uuid.uuid4().get_hex(), 0, "", ""))
-        self.set(iter, text = "Nyt produkt", amount = 0)
+        for signal, callback in (
+            ("changed(name)"    , update_name    ),
+            ("changed(count)"   , update_count   ),
+            ("changed(sell_val)", update_sell_val),
+            ("changed(buy_val)" , update_buy_val )
+        ):
+            product.observers.add(signal, callback, row)
+            callback(row, product)
+        
         return iter
-    
-    def remove(self, iter):
-        self.total -= self.get_value(iter, 1)
-        super(type(self), self).remove(iter)
-        
-    
-    def set(self, iter, text = None, amount = None):
-        if(amount != None):
-            self.total += amount - self.get_value(iter, 1)
-            integer  = str(amount // 100)
-            integer = integer[::-1]
-            integer = ".".join(integer[i:i+3] for i in range(0, len(integer), 3))
-            integer = integer[::-1]
-            fraction = str(amount % 100)
-            fraction = (fraction + "0")[:2]
-            amount_text = integer + "," + fraction + " kr."
 
-            super(type(self), self).set(iter, 1, amount, 3, amount_text)
-        if(text != None):    
-            super(type(self), self).set(iter, 2, text)
-
+def update_name(row, product, *args):
+    row[1] = product.name
+def update_count(row, product, *args):
+    if product.count is None:
+        row[2] = ""
+    else:
+        row[2] = product.count
+def update_sell_val(row, product, *args):
+    row[3] = product.sell_val
+def update_buy_val(row, product, *args):
+    row[4] = product.buy_val

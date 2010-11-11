@@ -2,15 +2,14 @@
 import gtk
 from .options import OptionsContainer
 from .store import ProductStore
-from .table import ProductStatus, ProductTable
+from .table import ProductTable
 class ProductBox(gtk.VBox):
     def __init__(self):
         super(type(self), self).__init__()
         self.title = u"Produkter"
         
         store = ProductStore()
-        status = ProductStatus()
-        table = ProductTable(store, status)
+        table = ProductTable(store)
         
         vbox = gtk.VBox()
         hbox = gtk.HBox()
@@ -23,7 +22,6 @@ class ProductBox(gtk.VBox):
                 (hbox, vbox),
                     (vbox, scrollwin),
                         (scrollwin, table),
-                    (vbox, status),
                 (hbox, options),
         ):
             parent.add(child)
@@ -32,13 +30,12 @@ class ProductBox(gtk.VBox):
             (self     , "spacing"          , 0                ),
             (vbox     , "spacing"          , 0                ),
             (hbox     , "spacing"          , 0                ),
-            (scrollwin, "vscrollbar-policy", gtk.POLICY_ALWAYS),
+            (scrollwin, "vscrollbar-policy", gtk.POLICY_AUTOMATIC),
             (scrollwin, "hscrollbar-policy", gtk.POLICY_NEVER ),
             (scrollwin, "shadow-type"      , gtk.SHADOW_IN    ),
         ):
             widget.set_property(name, value)
             
-        vbox.child_set_property(status , "expand", False)
         hbox.child_set_property(options, "expand", False)
         hbox.child_set_property(vbox   , "expand", True )
         
