@@ -7,12 +7,11 @@ class ProductTable(gtk.TreeView):
     def __init__(self, store):
         super(type(self), self).__init__(model=store)
         
-        self.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.get_selection().set_mode(gtk.SELECTION_SINGLE)
         
         self.store = store
 
         self.set_property("rules-hint"   , True)
-        self.set_property("rubber-banding"   , True)
         
         self.set_property("enable-search", False)
         
@@ -46,10 +45,16 @@ class ProductTable(gtk.TreeView):
         self.remove_selected()
     
     def remove_selected(self):
-        store, paths = self.get_selection().get_selected_rows()
-        references = [gtk.TreeRowReference(store, path) for path in paths]
+        references = self.get_selected()
         
         for reference in references:
+            store = reference.get_model()
             path = reference.get_path()
             iter = store.get_iter(path)
             store.remove(iter)
+
+    def get_selected(self):
+        store, paths = self.get_selection().get_selected_rows()
+        references = [gtk.TreeRowReference(store, path) for path in paths]
+        
+        return references
