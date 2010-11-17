@@ -1,21 +1,37 @@
 # -*- coding: utf-8 -*-
 import gtk
-from .options import OptionsContainer
-from .store import ProductStore
-from .table import ProductTable
-class ProductBox(gtk.VBox):
+
+from beercalc.lib import Observable, Observers
+from .productoptions import OptionsContainer
+from .producttable import ProductTable
+from .productdialog import ProductDialog
+
+
+class ProductBox(gtk.VBox, Observable):
     def __init__(self):
-        super(type(self), self).__init__()
+        gtk.VBox.__init__(self)
+        Observable.__init__(self)
+       
         self.title = u"Produkter"
         
-        store = ProductStore()
-        table = ProductTable(store)
+        table = ProductTable()
         
         vbox = gtk.VBox()
         hbox = gtk.HBox()
         scrollwin = gtk.ScrolledWindow()
         
         options = OptionsContainer(table)
+        
+        def add():
+            dialog = ProductDialog(self.get_toplevel())
+            def submit(name, sell_val, buy_val, misc):
+                self.observers.notify("add_product", name, sell_val, buy_val, misc)
+            dialog.observers.add("submit", submit)
+        options.observers.add("add", add)
+        
+        def delete():
+            table.remove_selection()
+        options.observers.add("delete", delete)
         
         for parent, child in (
             (self, hbox),
@@ -39,4 +55,16 @@ class ProductBox(gtk.VBox):
         hbox.child_set_property(options, "expand", False)
         hbox.child_set_property(vbox   , "expand", True )
         
+        self.table = table
+        
+    def add_product(self, cols, observers):
+        observers = Observers()
+        observers.
+        def removde
+        self.table.add_row(cols, observers)
+
+    
+
+
+
 

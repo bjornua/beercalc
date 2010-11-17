@@ -2,7 +2,7 @@
 import gtk
 import gobject
 from beercalc.lib.objects import DKK
-from beercalc.lib.misc import Observers
+from beercalc.lib import Observers
 
 class AccountStore(gtk.ListStore):
     def __init__(self):
